@@ -3,22 +3,25 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
 TOKEN = os.getenv("BOT_TOKEN")
-OWNER_ID = int(os.getenv("OWNER_ID"))
 
-TEXT = """💎 Premium
-👤 Admin: @RF_shakhr
-📞 Telefon: +998 91 778 26 81
+TEXT = """premium
+admin @RF_shakhr
+telefon +998 91 778 26 81
+"""
 
-Buyurtma uchun admin bilan bog‘laning ✨"""
-
-async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.message and update.effective_user.id == OWNER_ID:
-        await update.message.reply_text(TEXT)
+async def handle_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.channel_post:
+        try:
+            await context.bot.send_message(
+                chat_id=update.channel_post.chat_id,
+                text=TEXT,
+                reply_to_message_id=update.channel_post.message_id
+            )
+        except:
+            pass
 
 app = ApplicationBuilder().token(TOKEN).build()
 
-app.add_handler(MessageHandler(filters.ALL, reply))
-
-print("RUNNING...")
+app.add_handler(MessageHandler(filters.ALL, handle_post))
 
 app.run_polling()
