@@ -1,23 +1,13 @@
-import os
+# premium auto reply bot
+
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
+import os
 
 TOKEN = os.getenv("BOT_TOKEN")
-OWNER_ID = os.getenv("OWNER_ID")
 
-# Tekshiruv
 if not TOKEN:
     print("❌ BOT_TOKEN topilmadi")
-    exit()
-
-if not OWNER_ID:
-    print("❌ OWNER_ID topilmadi")
-    exit()
-
-try:
-    OWNER_ID = int(OWNER_ID)
-except:
-    print("❌ OWNER_ID noto‘g‘ri formatda")
     exit()
 
 AUTO_COMMENT = """💎 Premium
@@ -27,19 +17,9 @@ AUTO_COMMENT = """💎 Premium
 Buyurtma uchun admin bilan bog‘laning ✨"""
 
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    msg = update.effective_message
-    user = update.effective_user
-    chat = update.effective_chat
-
-    if (
-        msg
-        and user
-        and user.id == OWNER_ID
-        and chat.type != "private"
-        and not msg.reply_to_message
-    ):
+    if update.message:
         try:
-            await msg.reply_text(AUTO_COMMENT)
+            await update.message.reply_text(AUTO_COMMENT)
         except Exception as e:
             print("Xatolik:", e)
 
