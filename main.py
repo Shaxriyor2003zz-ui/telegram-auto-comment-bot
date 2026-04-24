@@ -14,18 +14,16 @@ AUTO_COMMENT = """💎 Premium
 Buyurtma uchun admin bilan bog‘laning ✨"""
 
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not update.message:
-        return
-
-    try:
-        await update.message.reply_text(AUTO_COMMENT)
-    except Exception as e:
-        print("Xatolik:", e)
+    if update.message:
+        try:
+            await update.message.reply_text(AUTO_COMMENT)
+        except Exception as e:
+            print("Xatolik:", e)
 
 app = ApplicationBuilder().token(TOKEN).build()
 
-# ❗ faqat text ushlaydi (eng muhim fix)
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle))
+# faqat oddiy text ishlaydi
+app.add_handler(MessageHandler(filters.TEXT, handle))
 
 print("✅ Bot ishga tushdi")
 
