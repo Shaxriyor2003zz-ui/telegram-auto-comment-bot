@@ -1,14 +1,8 @@
-# premium auto reply bot
-
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
 import os
 
 TOKEN = os.getenv("BOT_TOKEN")
-
-if not TOKEN:
-    print("❌ BOT_TOKEN topilmadi")
-    exit()
 
 AUTO_COMMENT = """💎 Premium
 👤 Admin: @RF_shakhr
@@ -17,9 +11,11 @@ AUTO_COMMENT = """💎 Premium
 Buyurtma uchun admin bilan bog‘laning ✨"""
 
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.message:
+    msg = update.effective_message
+
+    if msg:
         try:
-            await update.message.reply_text(AUTO_COMMENT)
+            await msg.reply_text(AUTO_COMMENT)
         except Exception as e:
             print("Xatolik:", e)
 
@@ -27,6 +23,6 @@ app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.ALL, handle))
 
-print("✅ Bot ishga tushdi")
+print("✅ Bot ishlayapti...")
 
 app.run_polling()
