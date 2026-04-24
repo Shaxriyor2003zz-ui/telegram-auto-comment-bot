@@ -4,6 +4,9 @@ import os
 
 TOKEN = os.getenv("BOT_TOKEN")
 
+if not TOKEN:
+    raise ValueError("BOT_TOKEN topilmadi!")
+
 AUTO_COMMENT = """💎 Premium
 👤 Admin: @RF_shakhr
 📞 Telefon: +998 91 778 26 81
@@ -11,18 +14,19 @@ AUTO_COMMENT = """💎 Premium
 Buyurtma uchun admin bilan bog‘laning ✨"""
 
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    msg = update.effective_message
+    if not update.message:
+        return
 
-    if msg:
-        try:
-            await msg.reply_text(AUTO_COMMENT)
-        except Exception as e:
-            print("Xatolik:", e)
+    try:
+        await update.message.reply_text(AUTO_COMMENT)
+    except Exception as e:
+        print("Xatolik:", e)
 
 app = ApplicationBuilder().token(TOKEN).build()
 
-app.add_handler(MessageHandler(filters.ALL, handle))
+# ❗ faqat text ushlaydi (eng muhim fix)
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle))
 
-print("✅ Bot ishlayapti...")
+print("✅ Bot ishga tushdi")
 
 app.run_polling()
